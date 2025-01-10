@@ -40,7 +40,7 @@ const Login = () => {
         { withCredentials: true }
       );
       dispatch(addUser(res.data));
-      navigate('/');
+      navigate(`${BASE_URL}/login`);
     } catch (err) {
       setError(err?.response?.data?.message || "Something went wrong..");
       console.log("Signup Error", err.message);
