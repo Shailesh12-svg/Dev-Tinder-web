@@ -21,8 +21,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Body/>}>
           {/* Children Routes */}
-          <Route path='/' element={<Feed/>}/>
-          <Route path='/login' element ={<Login/>}/>
+          <Route path='/login' element={<Login/>}/>
+          <Route path='/home' element ={<Feed/>}/>
           <Route path ='/signup' element={<SignUp/>}/>
           <Route path='/connections'element={<Connections/>}/>
           <Route path='/profile' element={<Profile/>}/>

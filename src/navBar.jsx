@@ -28,7 +28,7 @@ const handleLogout = async  ()=>{
         <div className="flex-1">
           <Link to="/" className="btn btn-ghost text-xl">🧑🏻‍💻Dev Tinder</Link>
         </div>
-        {user && (
+        { user && (
           <div className="flex-none gap-2">
             <div className="form-control">Welcome, {user.firstName}</div>
             <div className="dropdown dropdown-end mx-5 flex ">

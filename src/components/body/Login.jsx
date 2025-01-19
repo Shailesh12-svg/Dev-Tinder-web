@@ -24,7 +24,8 @@ const Login = () => {
         { withCredentials: true }
       );
       dispatch(addUser(res.data));
-      navigate('/');
+      console.log("Navigating to home page")
+      navigate('/home');
     } catch (err) {
       setError(err?.response?.data?.message || "Something went wrong..");
       console.log("Invalid Credentials", err.message);
@@ -39,8 +40,8 @@ const Login = () => {
         { firstName, lastName, emailId, password },
         { withCredentials: true }
       );
-      dispatch(addUser(res.data));
-      navigate('/login');
+      console.log("Navigating to Login page")
+      setIsLoginForm(true)
     } catch (err) {
       setError(err?.response?.data?.message || "Something went wrong..");
       console.log("Signup Error", err.message);
