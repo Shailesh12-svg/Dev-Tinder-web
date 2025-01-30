@@ -5,6 +5,12 @@ export default {
   theme: {
     extend: {},
   },
+  fontFamily: {
+    playfair: ['Playfair Display','Georgia', 'serif'],
+    sourceSans: ['Source Sans Pro', 'sans-serif'],
+    montserrat: ['Montserrat', 'sans-serif'],
+    smooch: ['Smooch Sans', 'sans-serif'],
+  },
   plugins: [daisyui],
 }
 
