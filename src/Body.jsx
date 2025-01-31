@@ -37,7 +37,7 @@ const Body = () => {
 
   return (
     <>
-      {/* <NavBar /> */}
+      <NavBar />
       <Outlet />
       {/* <Footer /> */}
     </>

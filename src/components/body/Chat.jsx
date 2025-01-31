@@ -1,33 +1,42 @@
-import React, { useEffect } from "react";
-import { useSelector } from 'react-redux';
-
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import './Chat.css'
 import { createSocketConnection } from "../../utils/socket";
+import { FaUserEdit, FaPhoneAlt, FaVideo, FaPaperPlane } from "react-icons/fa"; // ✅ Import icons
+import "./Chat.css";
 
 const Chat = () => {
   const { targetUserId } = useParams();
+  const user = useSelector((store) => store.user);
 
-  const user = useSelector((store)=>store.user)
+  const userId = user?._id;
 
-  const userId =user?._id;
+  //Sending a new Message
+  const[messages ,setMessages]=useState([]);
+  const [newMessage, setNewMessage] = useState("");
+
+
+  const sendMessage =()=>{
+    const socket = createSocketConnection();
+    socket.emit("sendMessage",{firstName:user.firstName,userId,targetUserId,text:newMessage});setNewMessage('')
+  }
   
 
-  // Define the missing functions
-  const handleProfile = () => alert("Edit Profile Clicked");
-  const handleCall = () => alert("Phone Call Clicked");
-  const handleVideoCall = () => alert("Video Call Clicked");
+  useEffect(() => {
+    if (!userId || !targetUserId) return;
 
-  useEffect(()=>{
     const socket = createSocketConnection();
+    socket.emit("joinChat", { firstName: user?.firstName, userId, targetUserId });
 
-    socket.emit("joinChat",{userId,targetUserId});
+    socket.on('messageReceived',({firstName,text})=>{
+      setMessages((messages)=>[...messages,{firstName,text}]);
+    })
 
-    return ()=>{
+    return () => {
       socket.disconnect();
-    }
-  },[])
-
+    };
+  }, [userId, targetUserId, user]);
+  
   return (
     <div>
       {/* Right Panel: Chat View */}
@@ -42,41 +51,45 @@ const Chat = () => {
             </div>
           </div>
           <div className="chat-actions">
-            <button className="action-button" title="Edit Profile" onClick={handleProfile}>
-              <i className="fas fa-user-edit"></i>
+            <button className="action-button" title="Edit Profile" onClick={() => alert("Edit Profile Clicked")}>
+              <FaUserEdit /> {/* ✅ React Icon */}
             </button>
-            <button className="action-button" title="Phone Call" onClick={handleCall}>
-              <i className="fas fa-phone-alt"></i>
+            <button className="action-button" title="Phone Call" onClick={() => alert("Phone Call Clicked")}>
+              <FaPhoneAlt /> {/* ✅ React Icon */}
             </button>
-            <button className="action-button" title="Video Call" onClick={handleVideoCall}>
-              <i className="fas fa-video"></i>
+            <button className="action-button" title="Video Call" onClick={() => alert("Video Call Clicked")}>
+              <FaVideo /> {/* ✅ React Icon */}
             </button>
           </div>
-        </div> {/* ✅ Added missing closing tag for chat-header */}
+        </div>
 
         {/* Chat Messages */}
+      
         <div className="chat-messages">
-          {Array.from({ length: 15 }, (_, i) => (
-            <div key={i} className={`chat-message ${i % 2 === 0 ? "message-left" : "message-right"}`}>
-              <div className={`message-bubble ${i % 2 === 0 ? "bubble-left" : "bubble-right"}`}>
-                {`This is message ${i + 1}`}
-              </div>
-            </div>
-          ))}
-        </div>
+  {messages.map((msg, index) => (
+    <div key={index} className="chat chat-start">
+      <div className="chat-header">
+        {msg.firstName}
+        <time className="text-xs opacity-50">2 hours ago</time>
+      </div>
+      <div className="chat-bubble">{msg.text} </div>
+      <div className="chat-footer opacity-50">Seen</div>
+    </div>
+  ))}
+</div>
+
 
         {/* Input Box */}
         <div className="chat-input">
-          <input type="text" className="input-field" placeholder="Type a message..." />
-          <button className="send-button">
-            <i className="fas fa-paper-plane"></i>
+          <input value={newMessage} onChange={(e)=>setNewMessage(e.target.value)}type="text" className="input-field" placeholder="Type a message..." />
+          <button onClick={sendMessage}className="send-button">
+            <FaPaperPlane /> {/* ✅ React Icon */}
           </button>
         </div>
-      </div> {/* ✅ Properly closed chat-view div */}
+      </div>
     </div>
   );
+
 };
 
 export default Chat;
-
-
